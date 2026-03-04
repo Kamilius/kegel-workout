@@ -21,7 +21,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-
+      
+      - name: Inject cache version from commit hash
+        run: |
+          VERSION=$(git rev-parse --short HEAD)
+          sed -i "s/kegel-v[a-zA-Z0-9]*/kegel-$VERSION/" sw.js
+          sed -i "s/sw\.js?v=[^'\"']*/sw.js?v=$VERSION/" app.js
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
