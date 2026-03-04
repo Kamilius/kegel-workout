@@ -337,10 +337,11 @@ html, body {
   cursor: pointer;
   transition: opacity 0.2s, transform 0.1s;
 }
-.btn-secondary svg, .btn-danger svg { width: 18px; height: 18px; }
+.btn-secondary svg, .btn-danger svg, .btn-success svg { width: 18px; height: 18px; }
 .btn-secondary { background: var(--bg2); color: var(--text); }
 .btn-danger    { background: rgba(233,69,96,0.15); color: var(--hold); }
-.btn-secondary:active, .btn-danger:active { opacity: 0.75; transform: scale(0.97); }
+.btn-secondary:active, .btn-danger:active, .btn-success:active { opacity: 0.75; transform: scale(0.97); }
+.btn-success   { background: rgba(72,199,142,0.15); color: var(--rest); }
 
 /* ── PROGRESS ──────────────────────────────────────────────────────────────── */
 .progress-content {
