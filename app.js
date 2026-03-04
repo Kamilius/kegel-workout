@@ -315,6 +315,10 @@ function enterPhase(phase) {
   }
 
   WS.interval = setInterval(tick, 1000);
+
+  document.getElementById('btn-done').classList.toggle(
+    'hidden', !(phase === 'hold' || phase === 'quick-hold')
+  );
 }
 
 function tick() {
@@ -441,6 +445,12 @@ function togglePause() {
   document.getElementById('icon-pause').classList.toggle('hidden', WS.paused);
   document.getElementById('icon-play').classList.toggle('hidden', !WS.paused);
   document.getElementById('pause-label').textContent = WS.paused ? 'Продовжити' : 'Пауза';
+}
+
+function skipPhase() {
+  clearInterval(WS.interval);
+  WS.timeLeft = 1;
+  tick();
 }
 
 function confirmStop() {
