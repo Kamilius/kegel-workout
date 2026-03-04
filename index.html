@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Кегель">
+  <title>Вправи Кегеля</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ HOME SCREEN ════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+    <header class="app-header">
+      <div class="app-title">
+        <h1>Вправи Кегеля</h1>
+        <div id="week-badge" class="week-badge">Тиждень 1</div>
+      </div>
+      <button id="btn-settings" class="btn-icon" onclick="openSettings()" aria-label="Налаштування">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </header>
+
+    <main class="home-content">
+      <div class="phase-card">
+        <div id="phase-name" class="phase-name">Базова активація</div>
+        <div id="phase-desc" class="phase-desc">3 с напруга · 3 с відпочинок · 10 повт. × 3 підходи</div>
+      </div>
+
+      <div class="session-cards">
+        <div class="session-card" id="card-morning">
+          <div class="session-left">
+            <span class="session-icon">&#127774;</span>
+            <div>
+              <div class="session-label">Ранкове тренування</div>
+              <div class="session-status" id="status-morning">не виконано</div>
+            </div>
+          </div>
+          <button class="btn-start" id="btn-morning" onclick="startSession('morning')">Почати</button>
+        </div>
+        <div class="session-card" id="card-evening">
+          <div class="session-left">
+            <span class="session-icon">&#127769;</span>
+            <div>
+              <div class="session-label">Вечірнє тренування</div>
+              <div class="session-status" id="status-evening">не виконано</div>
+            </div>
+          </div>
+          <button class="btn-start" id="btn-evening" onclick="startSession('evening')">Почати</button>
+        </div>
+      </div>
+
+      <div class="streak-row">
+        <div class="streak-card">
+          <div class="streak-number" id="home-streak">0</div>
+          <div class="streak-label">днів поспіль</div>
+        </div>
+        <div class="streak-card">
+          <div class="streak-number" id="home-total">0</div>
+          <div class="streak-label">тренувань всього</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ════════════════════════════ WORKOUT SCREEN ════════════════════════════ -->
+  <div id="screen-workout" class="screen">
+    <header class="workout-header">
+      <button class="btn-back" onclick="confirmStop()" aria-label="Назад">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="workout-meta">
+        <div id="workout-slot-label" class="workout-slot-label">Ранкове тренування</div>
+        <div id="workout-set-label" class="workout-set-label">Підхід 1 з 3</div>
+      </div>
+    </header>
+
+    <main class="workout-content">
+      <div id="phase-label" class="phase-label-large">Готуйся...</div>
+
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 220 220">
+          <circle class="timer-ring__bg" cx="110" cy="110" r="96"/>
+          <circle id="timer-arc" class="timer-ring__arc" cx="110" cy="110" r="96"
+                  stroke-dasharray="603.19" stroke-dashoffset="603.19"
+                  transform="rotate(-90 110 110)"/>
+          <text id="timer-number" x="110" y="118" text-anchor="middle" class="timer-ring__num">—</text>
+        </svg>
+      </div>
+
+      <div id="rep-counter" class="rep-counter">Повторення 1 / 10</div>
+
+      <div id="quick-bar" class="quick-bar hidden">
+        <div class="quick-dots" id="quick-dots"></div>
+        <div class="quick-label">Швидкі скорочення</div>
+      </div>
+
+      <div class="workout-controls">
+        <button id="btn-pause" class="btn-secondary" onclick="togglePause()">
+          <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor" class="hidden"><polygon points="5,3 19,12 5,21"/></svg>
+          <span id="pause-label">Пауза</span>
+        </button>
+        <button class="btn-danger" onclick="confirmStop()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Стоп
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ════════════════════════════ PROGRESS SCREEN ══════════════════════════ -->
+  <div id="screen-progress" class="screen">
+    <header class="app-header">
+      <h1>Прогрес</h1>
+    </header>
+    <main class="progress-content">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="prog-streak">0</div>
+          <div class="stat-label">днів поспіль</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="prog-week">1</div>
+          <div class="stat-label">поточний тиждень</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="prog-total">0</div>
+          <div class="stat-label">тренувань всього</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Останні 14 днів</h2>
+      <div class="calendar-table">
+        <div class="cal-header">
+          <span>Дата</span>
+          <span class="cal-slot">Ранок</span>
+          <span class="cal-slot">Вечір</span>
+        </div>
+        <div id="calendar-rows"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════ INFO SCREEN ════════════════════════════ -->
+  <div id="screen-info" class="screen">
+    <header class="app-header">
+      <h1>Про програму</h1>
+    </header>
+    <main class="info-content">
+
+      <details class="info-section" open>
+        <summary>Як знайти правильні м'язи</summary>
+        <div class="info-body">
+          <p>Спробуй зупинити струмінь сечі під час походу в туалет — це і є потрібні м'язи.</p>
+          <p>Також: напруж м'язи, ніби намагаєшся "втягнути" яєчка вгору.</p>
+          <p><strong>Важливо:</strong> під час вправ живіт, сідниці і стегна мають бути розслаблені. Дихай рівно.</p>
+        </div>
+      </details>
+
+      <details class="info-section">
+        <summary>Програма по тижнях</summary>
+        <div class="info-body">
+          <div class="prog-week-card">
+            <div class="prog-week-title">Тижні 1–2 · Базова активація</div>
+            <ul>
+              <li>Напруж 3 с · Розслаб 3 с</li>
+              <li>10 повторень × 3 підходи</li>
+              <li>Двічі на день</li>
+            </ul>
+          </div>
+          <div class="prog-week-card">
+            <div class="prog-week-title">Тижні 3–4 · Збільшення утримання</div>
+            <ul>
+              <li>Напруж 5 с · Розслаб 5 с</li>
+              <li>10 повторень × 3 підходи</li>
+              <li>+ 10 швидких скорочень після кожного підходу</li>
+            </ul>
+          </div>
+          <div class="prog-week-card">
+            <div class="prog-week-title">Тижні 5–6 · Силова фаза</div>
+            <ul>
+              <li>Напруж 7–10 с · Розслаб 5 с</li>
+              <li>10 повторень × 4 підходи</li>
+              <li>+ 20 швидких скорочень після кожного підходу</li>
+            </ul>
+          </div>
+          <div class="prog-week-card">
+            <div class="prog-week-title">Тижні 7–8 · Контрольна фаза</div>
+            <ul>
+              <li>Напруж 10 с · Розслаб 5 с</li>
+              <li>10 повторень × 4 підходи</li>
+              <li>Пульсуючі скорочення: 5 слабких + 1 максимальне</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details class="info-section">
+        <summary>Очікувані результати</summary>
+        <div class="info-body">
+          <table class="results-table">
+            <thead><tr><th>Термін</th><th>Ефект</th></tr></thead>
+            <tbody>
+              <tr><td>2–3 тижні</td><td>Краще відчуття м'язів</td></tr>
+              <tr><td>4–5 тижнів</td><td>Помітний контроль еякуляції</td></tr>
+              <tr><td>6–8 тижнів</td><td>Покращення ерекції та інтенсивності оргазму</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="info-section">
+        <summary>Правила безпеки</summary>
+        <div class="info-body">
+          <ul class="safety-list">
+            <li>Не затримуй дихання — дихай рівно</li>
+            <li>Після тренування повністю розслаб м'язи на 1–2 хвилини</li>
+            <li>Якщо відчуваєш біль або дискомфорт — зменши інтенсивність</li>
+            <li>Виконувати можна лежачи, сидячи, стоячи — непомітно будь-де</li>
+          </ul>
+        </div>
+      </details>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════ SETTINGS MODAL ═════════════════════════════ -->
+  <div id="modal-settings" class="modal hidden" onclick="closeSettingsOnBackdrop(event)">
+    <div class="modal-content">
+      <h2>Налаштування</h2>
+
+      <div class="setting-group">
+        <label for="reminder-morning">Нагадування вранці</label>
+        <input type="time" id="reminder-morning" value="08:00">
+      </div>
+      <div class="setting-group">
+        <label for="reminder-evening">Нагадування ввечері</label>
+        <input type="time" id="reminder-evening" value="21:00">
+      </div>
+
+      <div class="setting-group ntfy-group">
+        <label for="ntfy-topic">Тема ntfy.sh <span class="badge-opt">необов'язково</span></label>
+        <input type="text" id="ntfy-topic" placeholder="мій-унікальний-топік" autocomplete="off" spellcheck="false">
+        <p class="hint">
+          Встанови застосунок <a href="https://ntfy.sh" target="_blank" rel="noopener">ntfy.sh</a>,
+          підпишись на свою тему — і отримуватимеш нагадування навіть коли браузер закрито.
+        </p>
+        <button class="btn-ghost btn-sm" onclick="generateNtfyTopic()">Згенерувати тему</button>
+      </div>
+
+      <div class="setting-group">
+        <label for="start-date-input">Дата початку програми</label>
+        <input type="date" id="start-date-input">
+        <p class="hint">Змінюй лише якщо хочеш скоригувати поточний тиждень.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveSettings()">Зберегти</button>
+        <button class="btn-ghost" onclick="closeSettings()">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ COMPLETION OVERLAY ══════════════════════════ -->
+  <div id="overlay-done" class="overlay-done hidden">
+    <div class="done-card">
+      <div class="done-check">&#10003;</div>
+      <h2>Тренування виконано!</h2>
+      <p id="done-message">Так тримати!</p>
+      <button class="btn-primary" onclick="closeDone()">Чудово</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ CONFIRM STOP DIALOG ════════════════════════ -->
+  <div id="modal-stop" class="modal hidden" onclick="closeStopOnBackdrop(event)">
+    <div class="modal-content modal-sm">
+      <h2>Зупинити тренування?</h2>
+      <p>Прогрес цього підходу не збережеться.</p>
+      <div class="modal-actions">
+        <button class="btn-danger" onclick="stopWorkout()">Зупинити</button>
+        <button class="btn-ghost" onclick="closeStopModal()">Продовжити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ BOTTOM NAV ════════════════════════════════ -->
+  <nav class="bottom-nav" role="navigation">
+    <button class="nav-btn" data-screen="home" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Головна</span>
+    </button>
+    <button class="nav-btn" data-screen="progress" onclick="showScreen('progress')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Прогрес</span>
+    </button>
+    <button class="nav-btn" data-screen="info" onclick="showScreen('info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span>Програма</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
