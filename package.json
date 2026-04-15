@@ -1,0 +1,6 @@
+{
+  "name": "kegel-workout",
+  "version": "1.0.0",
+  "description": "Kegel workout tracker PWA with timer and weekly progression",
+  "private": true
+}
